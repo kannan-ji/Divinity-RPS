@@ -1,0 +1,5 @@
+{
+  "name": "Divinity RPS Predictor",
+  "description": "Predicts Rock-Paper-Scissors NPC patterns in Divinity: Original Sin.",
+  "requestFramePermissions": []
+}
