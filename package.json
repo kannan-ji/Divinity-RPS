@@ -1,1 +1,1 @@
-{"name": "your-project-name","version": "1.0.0","private": true,"dependencies": {"framer-motion": "^10.16.0"},"scripts": {"build": "vite build"}}
+{"name": "your-project-name","version": "1.0.0","private": true,"dependencies": {"framer-motion": "^10.16.0"},"devDependencies": {"vite": "^5.0.0"},"scripts": {"build": "vite build"}}
