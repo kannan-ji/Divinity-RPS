@@ -24,10 +24,11 @@ export class PredictionEngine {
   private history: GameHistory[] = [];
 
   recordActualOutcome(playerMove: Choice, npcMove: Choice) {
-    let result: 'win' | 'loss';
-    if (BEATS[playerMove] === npcMove) result = 'win';
-    else result = 'loss';
-
+    if (playerMove === npcMove) {
+      throw new Error("Draws are not permitted in this implementation.");
+    }
+    
+    const result = BEATS[playerMove] === npcMove ? 'win' : 'loss';
     this.history.push({ playerMove, npcMove, result });
   }
 
