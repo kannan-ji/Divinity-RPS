@@ -48,23 +48,21 @@ export default function App() {
           <div className="absolute inset-0 animate-pulse bg-gradient-to-b from-transparent via-white/5 to-transparent" />
         </div>
 
-        {/* Top Status Bar */}
-        <div className="pt-10 px-6 pb-4 flex items-center justify-between border-b border-[#2A2B2E]/50">
-          <div className="flex items-center gap-2">
-            <div className={cn("w-2 h-2 rounded-full", history.length > 0 ? "bg-green-500 shadow-[0_0_8px_#22c55e]" : "bg-yellow-500 shadow-[0_0_8px_#eab308]")} />
-            <span className="font-mono text-[9px] uppercase tracking-[2px] text-[#8E9299]">Divinity: Original Sin RPS predictor</span>
-          </div>
-          <button 
-            onClick={reset}
-            className="text-[#8E9299] hover:text-white transition-colors"
-          >
-            <RotateCcw size={14} />
-          </button>
-        </div>
-
         {/* Main Interface Content */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden px-6 pt-6 pb-2">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden px-6 pt-10 pb-2">
           
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4 shrink-0">
+            <span className="font-mono text-[10px] uppercase tracking-[2px] text-[#8E9299] font-bold">Divinity: Original Sin RPS Predictor</span>
+            <button 
+              onClick={reset}
+              className="text-[#8E9299] hover:text-white transition-colors p-2 -mr-2"
+              title="Reset predictor"
+            >
+              <RotateCcw size={16} />
+            </button>
+          </div>
+
           {/* Active Battle Widget - Fixed height at top */}
           <div className="relative mb-6 shrink-0">
             <div className="bg-[#1D1E22] rounded-3xl p-6 border border-[#2A2B2E] relative z-10">
