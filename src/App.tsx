@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Mountain as Rock, FileText as Paper, Scissors, RotateCcw, Activity, History, Info, ChevronRight, Zap, Maximize, Minimize } from 'lucide-react';
+import { Mountain as Rock, FileText as Paper, Scissors, RotateCcw, Activity, History, Info, ChevronRight, Zap, Maximize, Minimize, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PredictionEngine, Choice, CHOICES, BEATEN_BY } from './predictionEngine';
 import { clsx, type ClassValue } from 'clsx';
@@ -38,7 +38,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F1012] flex items-center justify-center p-0 md:p-4 overflow-hidden">
+    <div className="h-screen w-full bg-[#0F1012] flex items-center justify-center p-0 md:p-4 overflow-hidden">
       {/* Portrait container - 9:16 ratio */}
       <div className="w-full h-full md:h-auto md:max-w-[600px] md:aspect-[9/16] md:max-h-[90vh] bg-[#151619] shadow-2xl relative flex flex-col border-[#2A2B2E] md:border-4 md:rounded-[3rem] overflow-hidden">
         
@@ -63,7 +63,7 @@ export default function App() {
         </div>
 
         {/* Main Interface Content */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden px-6 pt-6">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden px-6 pt-6 pb-2">
           
           {/* Active Battle Widget - Fixed height at top */}
           <div className="relative mb-6 shrink-0">
@@ -118,7 +118,7 @@ export default function App() {
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 pt-6 border-t border-[#2A2B2E] flex justify-between items-center"
+                  className="mt-4 flex justify-between items-center"
                 >
                   <div className="flex items-center gap-2 text-[#22c55e]">
                     <Zap size={14} />
@@ -140,11 +140,11 @@ export default function App() {
                 <span className="text-[10px] uppercase font-mono tracking-[2px] text-[#8E9299]">Previous Moves Tracking</span>
               </div>
               <div className="text-[9px] font-mono text-[#5E6269] uppercase tracking-widest">
-                {history.length} Cycles Logged
+                {history.length} Cycles
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-3 pb-4">
+            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-3 pr-1 pb-32">
               {history.length > 0 ? (
                 history.slice().reverse().map((round, i) => (
                   <div 
@@ -186,44 +186,55 @@ export default function App() {
           </div>
         </div>
 
-        {/* Floating Bottom Bar */}
-        <div className="px-6 py-10 pb-12 bg-gradient-to-t from-[#0F1012] via-[#0F1012] to-transparent relative z-30">
-          <div className="bg-[#1D1E22] border border-[#2A2B2E] rounded-[2.5rem] p-3 shadow-2xl">
+        {/* Floating Bottom Bar - Fixed with glass effect */}
+        <div className="absolute bottom-0 left-0 right-0 px-6 py-6 z-30 shrink-0">
+          <div className="bg-[#1D1E22]/90 backdrop-blur-md border border-[#2A2B2E] rounded-[2rem] p-3 shadow-2xl flex flex-col gap-2">
             {!intendedMove ? (
-              <div className="flex gap-2">
-                {CHOICES.map(choice => (
-                  <button 
-                    key={choice}
-                    onClick={() => setIntendedMove(choice)}
-                    className="flex-1 h-16 rounded-full bg-[#2A2B2E] hover:bg-blue-500/20 hover:border-blue-500/50 border border-transparent transition-all flex flex-col items-center justify-center gap-1 group"
-                  >
-                    <ChoiceIcon choice={choice} size={20} className="text-[#8E9299] group-hover:text-blue-400" />
-                    <span className="text-[8px] uppercase font-mono text-[#8E9299] group-hover:text-blue-400">{choice}</span>
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className="text-center pt-0 pb-0">
+                  <span className="text-[9px] uppercase font-mono tracking-[4px] text-[#8E9299]/80 font-bold">Your Move</span>
+                </div>
+                <div className="flex gap-2 h-14">
+                  {CHOICES.map(choice => (
+                    <button 
+                      key={choice}
+                      onClick={() => setIntendedMove(choice)}
+                      className="flex-1 h-full rounded-2xl border border-[#2A2B2E] bg-[#151619] flex flex-col items-center justify-center gap-1 text-[#8E9299] hover:border-[#22c55e] hover:text-[#22c55e] transition-all group"
+                    >
+                      <ChoiceIcon choice={choice} size={20} className="group-hover:scale-110 transition-transform" />
+                      <span className="text-[8px] uppercase font-mono tracking-tighter opacity-60 group-hover:opacity-100">{choice}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
             ) : (
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={() => setIntendedMove(null)}
-                  className="w-12 h-16 rounded-full bg-[#2A2B2E]/50 border border-[#2A2B2E] flex items-center justify-center text-[#8E9299] hover:text-white transition-colors"
-                >
-                  <RotateCcw size={16} />
-                </button>
-                <div className="flex-1 h-16 px-4 bg-[#151619] rounded-full border border-[#2A2B2E] flex items-center justify-center gap-4 overflow-x-auto no-scrollbar">
-                  <div className="flex gap-4">
+              <>
+                <div className="text-center pt-0 pb-0">
+                  <span className="text-[9px] uppercase font-mono tracking-[4px] text-[#8E9299]/80 font-bold">Actual NPC Move</span>
+                </div>
+                <div className="flex items-center gap-2 h-14">
+                  <div className="flex-1 flex gap-2 h-full">
                     {CHOICES.filter(c => c !== intendedMove).map(choice => (
                       <button 
                         key={`n-${choice}`}
                         onClick={() => recordOutcome(choice)}
-                        className="w-12 h-12 rounded-full border border-[#2A2B2E] bg-[#1D1E22] flex items-center justify-center text-[#8E9299] hover:border-green-500 hover:text-green-500 hover:bg-green-500/10 transition-all shadow-lg group"
+                        className="flex-1 h-full rounded-2xl border border-[#2A2B2E] bg-[#151619] flex flex-col items-center justify-center gap-1 text-[#8E9299] hover:border-[#22c55e] hover:text-[#22c55e] transition-all group"
                       >
-                        <ChoiceIcon choice={choice} size={18} className="group-hover:scale-110 transition-transform" />
+                        <ChoiceIcon choice={choice} size={16} className="group-hover:scale-110 transition-transform" />
+                        <span className="text-[8px] uppercase font-mono tracking-tighter opacity-60 group-hover:opacity-100">{choice}</span>
                       </button>
                     ))}
                   </div>
+                  
+                  <button 
+                    onClick={() => setIntendedMove(null)}
+                    className="w-14 h-full rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all shrink-0"
+                    title="Cancel"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>
