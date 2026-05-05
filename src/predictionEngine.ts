@@ -41,10 +41,15 @@ export class PredictionEngine {
   }
 
   predictNpcResponse(intendedPlayerMove: Choice): { prediction: Choice; confidence: number; strategy: string } {
+    // In this implementation/mod, draws are impossible. 
+    // The NPC only has 2 valid choices: the one that beats the player and the one that is beaten by the player.
+    const npcWins = BEATEN_BY[intendedPlayerMove];
+    const npcLoses = BEATS[intendedPlayerMove];
+
     if (this.history.length === 0) {
       // First round: Many players start with Rock, NPCs might counter with Paper.
       return { 
-        prediction: BEATEN_BY[intendedPlayerMove], 
+        prediction: npcWins, 
         confidence: 0.33, 
         strategy: 'Default Reaction' 
       };
@@ -53,18 +58,23 @@ export class PredictionEngine {
     const lastRound = this.history[this.history.length - 1];
 
     // Strategy 1: Sequential Pattern Analysis (N-Gram)
-    // We look for patterns in what the NPC does AFTER the current player choice
+    // We look for patterns in what the NPC does AFTER matching player choices
     const patterns = this.findMatchingNpcMoves(intendedPlayerMove);
     if (patterns.length > 0) {
       const counts: Record<Choice, number> = { rock: 0, paper: 0, scissors: 0 };
       patterns.forEach(move => counts[move]++);
-      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-      const [topChoice, count] = sorted[0];
       
-      if (count > patterns.length * 0.4) {
+      // We only care about the 2 valid choices
+      if (counts[npcWins] > counts[npcLoses]) {
         return { 
-          prediction: topChoice as Choice, 
-          confidence: count / patterns.length, 
+          prediction: npcWins, 
+          confidence: counts[npcWins] / (counts[npcWins] + counts[npcLoses]), 
+          strategy: 'Contextual Pattern' 
+        };
+      } else if (counts[npcLoses] > counts[npcWins]) {
+        return { 
+          prediction: npcLoses, 
+          confidence: counts[npcLoses] / (counts[npcWins] + counts[npcLoses]), 
           strategy: 'Contextual Pattern' 
         };
       }
@@ -72,13 +82,15 @@ export class PredictionEngine {
 
     // Strategy 2: "Stay or Shift" - Does the NPC repeat moves?
     const lastNpcMove = lastRound.npcMove;
-    const sameMoveCount = this.history.filter(h => h.npcMove === lastNpcMove).length;
-    if (sameMoveCount > this.history.length * 0.6) {
-      return { 
-        prediction: lastNpcMove, 
-        confidence: 0.5, 
-        strategy: 'Stability Bias' 
-      };
+    if (lastNpcMove !== intendedPlayerMove) {
+      const sameMoveCount = this.history.filter(h => h.npcMove === lastNpcMove).length;
+      if (sameMoveCount > this.history.length * 0.4) {
+        return { 
+          prediction: lastNpcMove, 
+          confidence: 0.5, 
+          strategy: 'Stability Bias' 
+        };
+      }
     }
 
     // Strategy 3: Rotational Detection (Rock -> Paper -> Scissors)
@@ -86,9 +98,10 @@ export class PredictionEngine {
       const p1 = this.history[this.history.length - 2].npcMove;
       const p2 = this.history[this.history.length - 1].npcMove;
       
-      if (BEATEN_BY[p1] === p2) {
+      const potentialNext = BEATEN_BY[p2];
+      if (BEATEN_BY[p1] === p2 && potentialNext !== intendedPlayerMove) {
         return { 
-          prediction: BEATEN_BY[p2], 
+          prediction: potentialNext, 
           confidence: 0.7, 
           strategy: 'Positive Rotation' 
         };
@@ -97,7 +110,7 @@ export class PredictionEngine {
 
     // Strategy 4: Counter-Intent (Default assumption: NPC tries to beat player)
     return { 
-      prediction: BEATEN_BY[intendedPlayerMove], 
+      prediction: npcWins, 
       confidence: 0.4, 
       strategy: 'Predictive Reaction' 
     };
