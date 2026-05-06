@@ -47,11 +47,12 @@ export class PredictionEngine {
     const npcLoses = BEATS[intendedPlayerMove];
 
     if (this.history.length === 0) {
-      // First round: Many players start with Rock, NPCs might counter with Paper.
+      // First round: 50/50 chance between NPC winning and NPC losing
+      const isNpcWinning = Math.random() < 0.5;
       return { 
-        prediction: npcWins, 
-        confidence: 0.33, 
-        strategy: 'Default Reaction' 
+        prediction: isNpcWinning ? npcWins : npcLoses, 
+        confidence: 0.5, 
+        strategy: 'Initial Random' 
       };
     }
 
