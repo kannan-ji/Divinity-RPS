@@ -1,5 +1,5 @@
 {
-  "name": "Divinity RPS Predictor",
+  "name": "DOS RPS Predictor",
   "description": "An advanced Rock-Paper-Scissors predictor tool for Divinity: Original Sin, identifying NPC choice patterns to help players win debates and persuasion checks.",
   "requestFramePermissions": []
 }

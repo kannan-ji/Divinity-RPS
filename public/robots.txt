@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ais-pre-yup6ipc3vmd7u2zhpz4bdq-45811124394.asia-southeast1.run.app/sitemap.xml
+Sitemap: https://kannan-ji.github.io/Divinity-RPS/sitemap.xml

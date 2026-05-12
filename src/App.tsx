@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Mountain as Rock, FileText as Paper, Scissors, RotateCcw, Activity, History, Info, ChevronRight, Zap, Maximize, Minimize, X } from 'lucide-react';
+import { Mountain as Rock, FileText as Paper, Scissors, RotateCcw, Activity, History, Info, ChevronRight, Zap, Maximize, Minimize, X, Share2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PredictionEngine, Choice, CHOICES, BEATEN_BY } from './predictionEngine';
 import { clsx, type ClassValue } from 'clsx';
@@ -37,6 +37,27 @@ export default function App() {
     setIntendedMove(null);
   };
 
+  const handleShare = async () => {
+    const shareData = {
+      title: 'DOS RPS Predictor',
+      text: 'Hey! this one predicts Rock x Paper x Scissors AI moves in Divinity: Original Sin!',
+      url: 'https://kannan-ji.github.io/Divinity-RPS/',
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+        // Minimal visual feedback could be added here if needed
+      }
+    } catch (err) {
+      if (err instanceof Error && err.name !== 'AbortError') {
+        console.error('Error sharing:', err);
+      }
+    }
+  };
+
   return (
     <main className="h-screen w-full bg-[#0F1012] flex items-center justify-center p-0 md:p-4 overflow-hidden">
       {/* Portrait container - 9:16 ratio */}
@@ -53,13 +74,13 @@ export default function App() {
           
           {/* Header */}
           <header className="flex items-center justify-between mb-4 shrink-0">
-            <h1 className="font-mono text-[10px] uppercase tracking-[2px] text-[#8E9299] font-bold">Divinity: Original Sin RPS Predictor</h1>
+            <h1 className="font-mono text-[10px] uppercase tracking-[2px] text-[#8E9299] font-bold">DOS RPS Predictor</h1>
             <button 
-              onClick={reset}
+              onClick={handleShare}
               className="text-[#8E9299] hover:text-white transition-colors p-2 -mr-2"
-              title="Reset predictor"
+              title="Share app"
             >
-              <RotateCcw size={16} />
+              <Share2 size={16} />
             </button>
           </header>
 
@@ -137,8 +158,19 @@ export default function App() {
                 <History size={14} className="text-[#8E9299]" />
                 <h2 className="text-[10px] uppercase font-mono tracking-[2px] text-[#8E9299]">Previous Moves Tracking</h2>
               </div>
-              <div className="text-[9px] font-mono text-[#5E6269] uppercase tracking-widest">
-                {history.length} Cycles
+              <div className="flex items-center gap-3">
+                <div className="text-[9px] font-mono text-[#5E6269] uppercase tracking-widest">
+                  {history.length} Cycles
+                </div>
+                {history.length > 0 && (
+                  <button 
+                    onClick={reset}
+                    className="text-[#5E6269] hover:text-red-400 transition-colors p-1"
+                    title="Clear history"
+                  >
+                    <RotateCcw size={12} />
+                  </button>
+                )}
               </div>
             </div>
 
