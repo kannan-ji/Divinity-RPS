@@ -38,9 +38,9 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-full bg-[#0F1012] flex items-center justify-center p-0 md:p-4 overflow-hidden">
+    <main className="h-screen w-full bg-[#0F1012] flex items-center justify-center p-0 md:p-4 overflow-hidden">
       {/* Portrait container - 9:16 ratio */}
-      <div className="w-full h-full md:h-auto md:max-w-[600px] md:aspect-[9/16] md:max-h-[90vh] bg-[#151619] shadow-2xl relative flex flex-col border-[#2A2B2E] md:border-4 md:rounded-[3rem] overflow-hidden">
+      <article className="w-full h-full md:h-auto md:max-w-[600px] md:aspect-[9/16] md:max-h-[90vh] bg-[#151619] shadow-2xl relative flex flex-col border-[#2A2B2E] md:border-4 md:rounded-[3rem] overflow-hidden">
         
         {/* CRT Overlay Effect */}
         <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.03] overflow-hidden">
@@ -52,8 +52,8 @@ export default function App() {
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden px-6 pt-10 pb-2">
           
           {/* Header */}
-          <div className="flex items-center justify-between mb-4 shrink-0">
-            <span className="font-mono text-[10px] uppercase tracking-[2px] text-[#8E9299] font-bold">Divinity: Original Sin RPS Predictor</span>
+          <header className="flex items-center justify-between mb-4 shrink-0">
+            <h1 className="font-mono text-[10px] uppercase tracking-[2px] text-[#8E9299] font-bold">Divinity: Original Sin RPS Predictor</h1>
             <button 
               onClick={reset}
               className="text-[#8E9299] hover:text-white transition-colors p-2 -mr-2"
@@ -61,10 +61,10 @@ export default function App() {
             >
               <RotateCcw size={16} />
             </button>
-          </div>
+          </header>
 
           {/* Active Battle Widget - Fixed height at top */}
-          <div className="relative mb-6 shrink-0">
+          <section className="relative mb-6 shrink-0" aria-label="Current Prediction">
             <div className="bg-[#1D1E22] rounded-3xl p-6 border border-[#2A2B2E] relative z-10">
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-1">
@@ -128,14 +128,14 @@ export default function App() {
                 </motion.div>
               )}
             </div>
-          </div>
-
+          </section>
+          
           {/* Previous Moves Section - Takes up remaining height */}
-          <div className="flex-1 flex flex-col min-h-0 min-w-0">
+          <section className="flex-1 flex flex-col min-h-0 min-w-0" aria-label="Move History">
             <div className="flex items-center justify-between mb-4 shrink-0">
               <div className="flex items-center gap-2">
                 <History size={14} className="text-[#8E9299]" />
-                <span className="text-[10px] uppercase font-mono tracking-[2px] text-[#8E9299]">Previous Moves Tracking</span>
+                <h2 className="text-[10px] uppercase font-mono tracking-[2px] text-[#8E9299]">Previous Moves Tracking</h2>
               </div>
               <div className="text-[9px] font-mono text-[#5E6269] uppercase tracking-widest">
                 {history.length} Cycles
@@ -181,16 +181,16 @@ export default function App() {
                 </div>
               )}
             </div>
-          </div>
+          </section>
         </div>
 
         {/* Floating Bottom Bar - Fixed with glass effect */}
-        <div className="absolute bottom-0 left-0 right-0 px-6 py-6 z-30 shrink-0">
+        <section className="absolute bottom-0 left-0 right-0 px-6 py-6 z-30 shrink-0" aria-label="Input Controls">
           <div className="bg-[#1D1E22]/90 backdrop-blur-md border border-[#2A2B2E] rounded-[2rem] p-3 shadow-2xl flex flex-col gap-2">
             {!intendedMove ? (
               <>
                 <div className="text-center pt-0 pb-0">
-                  <span className="text-[9px] uppercase font-mono tracking-[4px] text-[#8E9299]/80 font-bold">Your Move</span>
+                  <h2 className="text-[9px] uppercase font-mono tracking-[4px] text-[#8E9299]/80 font-bold">Your Move</h2>
                 </div>
                 <div className="flex gap-2 h-14">
                   {CHOICES.map(choice => (
@@ -198,6 +198,7 @@ export default function App() {
                       key={choice}
                       onClick={() => setIntendedMove(choice)}
                       className="flex-1 h-full rounded-2xl border border-[#2A2B2E] bg-[#151619] flex flex-col items-center justify-center gap-1 text-[#8E9299] hover:border-[#22c55e] hover:text-[#22c55e] transition-all group"
+                      aria-label={`Select ${choice}`}
                     >
                       <ChoiceIcon choice={choice} size={20} className="group-hover:scale-110 transition-transform" />
                       <span className="text-[8px] uppercase font-mono tracking-tighter opacity-60 group-hover:opacity-100">{choice}</span>
@@ -208,7 +209,7 @@ export default function App() {
             ) : (
               <>
                 <div className="text-center pt-0 pb-0">
-                  <span className="text-[9px] uppercase font-mono tracking-[4px] text-[#8E9299]/80 font-bold">Actual NPC Move</span>
+                  <h2 className="text-[9px] uppercase font-mono tracking-[4px] text-[#8E9299]/80 font-bold">Actual NPC Move</h2>
                 </div>
                 <div className="flex items-center gap-2 h-14">
                   <div className="flex-1 flex gap-2 h-full">
@@ -217,6 +218,7 @@ export default function App() {
                         key={`n-${choice}`}
                         onClick={() => recordOutcome(choice)}
                         className="flex-1 h-full rounded-2xl border border-[#2A2B2E] bg-[#151619] flex flex-col items-center justify-center gap-1 text-[#8E9299] hover:border-[#22c55e] hover:text-[#22c55e] transition-all group"
+                        aria-label={`Confirm NPC played ${choice}`}
                       >
                         <ChoiceIcon choice={choice} size={16} className="group-hover:scale-110 transition-transform" />
                         <span className="text-[8px] uppercase font-mono tracking-tighter opacity-60 group-hover:opacity-100">{choice}</span>
@@ -235,10 +237,10 @@ export default function App() {
               </>
             )}
           </div>
-        </div>
+        </section>
 
-      </div>
-    </div>
+      </article>
+    </main>
   );
 }
 
