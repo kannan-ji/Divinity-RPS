@@ -1,4 +1,4 @@
-# DOS RPS Predictor
+# Divinity Original Sin RPS Predictor
 
 A web application designed to help players dominate Rock-Paper-Scissors mini-games in *Divinity: Original Sin*.
 
